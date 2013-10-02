@@ -24,6 +24,13 @@ Colony col;
 Food food;
 Map pherHome;
 Map pherFood;
+
+// convolution/blur stuff
+int blurWidth = 60;
+float blurAmount = 0.111;
+float[][] matrix = { { blurAmount, blurAmount, blurAmount },
+                     { blurAmount, blurAmount, blurAmount },
+                     { blurAmount, blurAmount, blurAmount } };
  
 void setup() {
   size(900, 506, P2D);
