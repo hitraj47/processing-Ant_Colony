@@ -47,15 +47,18 @@ void setup() {
   for (int i=0; i<10; i++) {
     food.addFood(400+int(random(-50, 50)), 300+int(random(-50, 50)));
   }
+  
 }
  
 void draw() {
   // Clear bg
   //background(DIRT_COLOR);
- 
+  
   // Add food
-  if (mousePressed) {
+  if (mousePressed && mouseButton == LEFT) {
     food.addFood(mouseX, mouseY);
+  } else if (mousePressed && mouseButton == RIGHT) {
+    // this is where we do blur
   }
  
   loadPixels();
@@ -130,6 +133,8 @@ void draw() {
   // Evaporate
   pherHome.step();
   pherFood.step();
+  
+  brushButton.display();
  
   // Debug
   //println(frameRate);
