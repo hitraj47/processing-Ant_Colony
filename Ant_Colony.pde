@@ -26,13 +26,6 @@ Map pherHome;
 Map pherFood;
 
 PImage img;
-
-// convolution/blur stuff
-int blurWidth = 60;  // box width and height
-float blurAmount = 0.111;
-float[][] matrix = { { blurAmount, blurAmount, blurAmount },
-                     { blurAmount, blurAmount, blurAmount },
-                     { blurAmount, blurAmount, blurAmount } };
  
 void setup() {
   size(900, 506, P2D);
@@ -151,6 +144,5 @@ void mouseDragged() {
     pherHome.blur(mouseX, mouseY);
     pherFood.blur(mouseX, mouseY);
   }
-  updatePixels();
 }
 

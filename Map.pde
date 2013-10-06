@@ -7,6 +7,13 @@ class Map {
  
   private float MAX_VAL = 100;
   private float EVAPORATION_RATE = .999;
+  
+  // convolution/blur stuff
+  int blurWidth = 60;  // box width and height
+  float blurAmount = 0.111;
+  float[][] matrix = { { blurAmount, blurAmount, blurAmount },
+                       { blurAmount, blurAmount, blurAmount },
+                       { blurAmount, blurAmount, blurAmount } };
  
   // A float map
   Map (int w, int h) {
@@ -134,6 +141,7 @@ class Map {
         color c = convolution(x, y, matrix, matrixsize, img);
         int loc = x + y*img.width;
         pixels[loc] = c;
+        updatePixels();
       }
     }
   }
