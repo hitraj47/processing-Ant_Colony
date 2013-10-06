@@ -24,8 +24,6 @@ Colony col;
 Food food;
 Map pherHome;
 Map pherFood;
-
-PImage img;
  
 void setup() {
   size(900, 506, P2D);
@@ -42,9 +40,6 @@ void setup() {
   for (int i=0; i<10; i++) {
     food.addFood(400+int(random(-50, 50)), 300+int(random(-50, 50)));
   }
-  
-  // load our image for convolution
-  img = createImage(width, height, RGB);
   
 }
  
@@ -84,9 +79,6 @@ void draw() {
     }
     // Set
     pixels[i] = pixelColor;
-    
-    // set img pixels
-    img.pixels = pixels;
   }
   updatePixels();
  
@@ -141,8 +133,8 @@ void draw() {
 void mouseDragged() {
   
   if (mouseButton == RIGHT) {
-    pherHome.blur(mouseX, mouseY, img);
-    pherFood.blur(mouseX, mouseY, img);
+    pherHome.blur(mouseX, mouseY);
+    pherFood.blur(mouseX, mouseY);
   }
 }
 

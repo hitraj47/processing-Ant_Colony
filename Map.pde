@@ -126,27 +126,27 @@ class Map {
     return strongest;
   }
   
-  void blur(int _xpos, int _ypos, PImage _img) {
+  void blur(int _xpos, int _ypos) {
     // Calculate the blur rectangle
-    int xstart = constrain(_xpos - blurWidth/2, 0, _img.width);
-    int ystart = constrain(_ypos - blurWidth/2, 0, _img.height);
-    int xend = constrain(_xpos + blurWidth/2, 0, _img.width);
-    int yend = constrain(_ypos + blurWidth/2, 0, _img.height);
+    int xstart = constrain(_xpos - blurWidth/2, 0, width);
+    int ystart = constrain(_ypos - blurWidth/2, 0, height);
+    int xend = constrain(_xpos + blurWidth/2, 0, width);
+    int yend = constrain(_ypos + blurWidth/2, 0, height);
     int matrixsize = 3;
     loadPixels();
 
     // Begin our loop for every pixel in the smaller image
     for (int x = xstart; x < xend; x++) {
       for (int y = ystart; y < yend; y++) {
-        color c = convolution(x, y, matrix, matrixsize, _img);
-        int loc = x + y*_img.width;
+        color c = convolution(x, y, matrix, matrixsize);
+        int loc = x + y*width;
         pixels[loc] = c;
         updatePixels();
       }
     }
   }
   
-  color convolution(int x, int y, float[][] matrix, int matrixsize, PImage img)
+  color convolution(int x, int y, float[][] matrix, int matrixsize)
   {
     float rtotal = 0.0;
     float gtotal = 0.0;
@@ -157,13 +157,13 @@ class Map {
         // What pixel are we testing
         int xloc = x+i-offset;
         int yloc = y+j-offset;
-        int loc = xloc + img.width*yloc;
+        int loc = xloc + width*yloc;
         // Make sure we haven't walked off our image, we could do better here
-        loc = constrain(loc,0,img.pixels.length-1);
+        loc = constrain(loc,0,pixels.length-1);
         // Calculate the convolution
-        rtotal += (red(img.pixels[loc]) * matrix[i][j]);
-        gtotal += (green(img.pixels[loc]) * matrix[i][j]);
-        btotal += (blue(img.pixels[loc]) * matrix[i][j]);
+        rtotal += (red(pixels[loc]) * matrix[i][j]);
+        gtotal += (green(pixels[loc]) * matrix[i][j]);
+        btotal += (blue(pixels[loc]) * matrix[i][j]);
       }
     }
     // Make sure RGB is within range
