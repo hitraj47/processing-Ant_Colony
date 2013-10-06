@@ -58,8 +58,7 @@ void draw() {
     if (food.getValue(i)) {
       // Draw food
       pixelColor = FOOD_COLOR;
-    }
-    else {
+    } else {
       // Draw pheromones
       // I found the direct math to be faster than blendColor()
       float pixelAlpha = pherHome.getPercentage(i);

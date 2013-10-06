@@ -141,9 +141,9 @@ class Map {
         color c = convolution(x, y, matrix, matrixsize);
         int loc = x + y*width;
         pixels[loc] = c;
-        updatePixels();
       }
     }
+    updatePixels();
   }
   
   color convolution(int x, int y, float[][] matrix, int matrixsize)
