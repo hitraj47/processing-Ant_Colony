@@ -50,6 +50,9 @@ void setup() {
     food.addFood(400+int(random(-50, 50)), 300+int(random(-50, 50)));
   }
   
+  // load our image for convolution
+  img = createImage(width, height, RGB);
+  
 }
  
 void draw() {
@@ -88,6 +91,9 @@ void draw() {
     }
     // Set
     pixels[i] = pixelColor;
+    
+    // set img pixels
+    img.pixels = pixels;
   }
   updatePixels();
  
@@ -137,7 +143,6 @@ void draw() {
   // Debug
   //println(frameRate);
   
-  img = createImage(width,height,RGB);
 }
 
 void mouseDragged() {
