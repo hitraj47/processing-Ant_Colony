@@ -25,8 +25,10 @@ Food food;
 Map pherHome;
 Map pherFood;
 
+PImage img;
+
 // convolution/blur stuff
-int blurWidth = 60;
+int blurWidth = 60;  // box width and height
 float blurAmount = 0.111;
 float[][] matrix = { { blurAmount, blurAmount, blurAmount },
                      { blurAmount, blurAmount, blurAmount },
@@ -134,6 +136,31 @@ void draw() {
  
   // Debug
   //println(frameRate);
+  
+  img = createImage(width,height,RGB);
+}
+
+void mouseDragged() {
+  
+  if (mouseButton == RIGHT) {
+    // Calculate the blur rectangle
+    int xstart = constrain(mouseX - blurWidth/2, 0, img.width);
+    int ystart = constrain(mouseY - blurWidth/2, 0, img.height);
+    int xend = constrain(mouseX + blurWidth/2, 0, img.width);
+    int yend = constrain(mouseY + blurWidth/2, 0, img.height);
+    int matrixsize = 3;
+    loadPixels();
+
+    // Begin our loop for every pixel in the smaller image
+    for (int x = xstart; x < xend; x++) {
+      for (int y = ystart; y < yend; y++) {
+        color c = convolution(x, y, matrix, matrixsize, img);
+        int loc = x + y*img.width;
+        pixels[loc] = c;
+      }
+    }
+  }
+  updatePixels();
 }
 
 color convolution(int x, int y, float[][] matrix, int matrixsize, PImage img)
