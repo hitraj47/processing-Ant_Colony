@@ -87,6 +87,10 @@ void draw() {
     
     // set img pixels
     img.pixels = pixels;
+    if (mousePressed && mouseButton == RIGHT) {
+      pherHome.blur(mouseX,mouseY,img);
+      pherFood.blur(mouseX,mouseY,img);
+    }
   }
   updatePixels();
  
@@ -138,11 +142,13 @@ void draw() {
   
 }
 
+/*
 void mouseDragged() {
   
   if (mouseButton == RIGHT) {
-    pherHome.blur(mouseX, mouseY);
-    pherFood.blur(mouseX, mouseY);
+    pherHome.blur(mouseX, mouseY, img);
+    pherFood.blur(mouseX, mouseY, img);
   }
 }
+*/
 

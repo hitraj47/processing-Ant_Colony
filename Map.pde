@@ -126,20 +126,20 @@ class Map {
     return strongest;
   }
   
-  void blur(int _xpos, int _ypos) {
+  void blur(int _xpos, int _ypos, PImage _img) {
     // Calculate the blur rectangle
-    int xstart = constrain(_xpos - blurWidth/2, 0, img.width);
-    int ystart = constrain(_ypos - blurWidth/2, 0, img.height);
-    int xend = constrain(_xpos + blurWidth/2, 0, img.width);
-    int yend = constrain(_ypos + blurWidth/2, 0, img.height);
+    int xstart = constrain(_xpos - blurWidth/2, 0, _img.width);
+    int ystart = constrain(_ypos - blurWidth/2, 0, _img.height);
+    int xend = constrain(_xpos + blurWidth/2, 0, _img.width);
+    int yend = constrain(_ypos + blurWidth/2, 0, _img.height);
     int matrixsize = 3;
     loadPixels();
 
     // Begin our loop for every pixel in the smaller image
     for (int x = xstart; x < xend; x++) {
       for (int y = ystart; y < yend; y++) {
-        color c = convolution(x, y, matrix, matrixsize, img);
-        int loc = x + y*img.width;
+        color c = convolution(x, y, matrix, matrixsize, _img);
+        int loc = x + y*_img.width;
         pixels[loc] = c;
         updatePixels();
       }
