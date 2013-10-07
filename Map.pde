@@ -133,45 +133,26 @@ class Map {
     int xend = constrain(_xpos + blurWidth/2, 0, width);
     int yend = constrain(_ypos + blurWidth/2, 0, height);
     int matrixsize = 3;
-    loadPixels();
 
     // Begin our loop for every pixel in the smaller image
     for (int x = xstart; x < xend; x++) {
       for (int y = ystart; y < yend; y++) {
-        color c = convolution(x, y, matrix, matrixsize);
-        int loc = x + y*width;
-        pixels[loc] = c;
+        setValue(x, y, convolution(x, y, matrix, matrixsize));
       }
     }
-    updatePixels();
   }
   
-  color convolution(int x, int y, float[][] matrix, int matrixsize)
+  float convolution(int x, int y, float[][] matrix, int matrixsize)
   {
-    float rtotal = 0.0;
-    float gtotal = 0.0;
-    float btotal = 0.0;
-    int offset = matrixsize / 2;
+    float atotal = 0.0;
     for (int i = 0; i < matrixsize; i++){
       for (int j= 0; j < matrixsize; j++){
-        // What pixel are we testing
-        int xloc = x+i-offset;
-        int yloc = y+j-offset;
-        int loc = xloc + width*yloc;
-        // Make sure we haven't walked off our image, we could do better here
-        loc = constrain(loc,0,pixels.length-1);
-        // Calculate the convolution
-        rtotal += (red(pixels[loc]) * matrix[i][j]);
-        gtotal += (green(pixels[loc]) * matrix[i][j]);
-        btotal += (blue(pixels[loc]) * matrix[i][j]);
+        atotal += (getValue(x-1+i, y-1+i) * matrix[i][j]);
       }
     }
-    // Make sure RGB is within range
-    rtotal = constrain(rtotal, 0, 255);
-    gtotal = constrain(gtotal, 0, 255);
-    btotal = constrain(btotal, 0, 255);
     // Return the resulting color
-    return color(rtotal, gtotal, btotal);
+    return atotal;   
   }
+  
 }
 
