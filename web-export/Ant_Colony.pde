@@ -24,9 +24,16 @@ Colony col;
 Food food;
 Map pherHome;
 Map pherFood;
+
+Button btnToggleHungerDisplay;
+String showHungerLabel = "Show hunger levels";
+String hideHungerLabel = "Hide hunger levels";
+
+float antHungerRate = 0.01;  // how much the ant gains hunger
+float antHungerReduction = 20;  // how much hunger is reduced when ant eats
  
 void setup() {
-  size(900, 506, P2D);
+  size(900, 506);
   background(DIRT_COLOR);
   noStroke();
   //smooth();
@@ -41,17 +48,16 @@ void setup() {
     food.addFood(400+int(random(-50, 50)), 300+int(random(-50, 50)));
   }
   
+  // show/hide ant hunger
+  btnToggleHungerDisplay = new Button(showHungerLabel, 800, 20, 120, 30);
+  
 }
  
 void draw() {
+  
   // Clear bg
   //background(DIRT_COLOR);
   
-  // Add food
-  if (mousePressed && mouseButton == LEFT) {
-    food.addFood(mouseX, mouseY);
-  }
- 
   loadPixels();
   for (int i=0; i<pherHome.length; i++) {
     color pixelColor;
@@ -91,7 +97,7 @@ void draw() {
     
     if (thisAnt.isAlive()) {
       thisAnt.step();
-      thisAnt.setHungerLevel(thisAnt.getHungerLevel() + 0.01);
+      thisAnt.setHungerLevel(thisAnt.getHungerLevel() + antHungerRate);
     }
  
     int thisXi = thisAnt.intX;
@@ -116,7 +122,7 @@ void draw() {
       thisAnt.hasFood = true;
       thisAnt.foodPher = 100;
       food.bite(thisXi, thisYi);
-      thisAnt.setHungerLevel(thisAnt.getHungerLevel() - 20);
+      thisAnt.setHungerLevel(thisAnt.getHungerLevel() - antHungerReduction);
     }
  
     if (abs(thisAnt.dx) > abs(thisAnt.dy)) {
@@ -127,7 +133,11 @@ void draw() {
       rect(thisXf,thisYf,2,3);
     }
     
-    if (mouseNearAnt(thisAnt.intX, thisAnt.intY)) {
+    if (btnToggleHungerDisplay.getLabel().equals(showHungerLabel)) {
+      if (mouseNearAnt(thisAnt.intX, thisAnt.intY)) {
+        showAntHunger(thisAnt);
+      }
+    } else if (btnToggleHungerDisplay.getLabel().equals(hideHungerLabel)) {
       showAntHunger(thisAnt);
     }
   }
@@ -139,6 +149,28 @@ void draw() {
   // Debug
   //println(frameRate);
   
+  // display button
+  btnToggleHungerDisplay.display();
+  
+}
+
+void mousePressed() {
+   // Add food
+  if (mouseButton == LEFT) {
+    if (btnToggleHungerDisplay.isMouseOverButton()) {
+      toggleHungerDisplayButton();
+    } else {
+      food.addFood(mouseX, mouseY);
+    }
+  }
+}
+
+void toggleHungerDisplayButton() {
+  if (btnToggleHungerDisplay.getLabel().equals(showHungerLabel)) {
+    btnToggleHungerDisplay.setLabel(hideHungerLabel);
+  } else {
+    btnToggleHungerDisplay.setLabel(showHungerLabel);
+  }
 }
 
 boolean mouseNearAnt(int _antX, int _antY) {
@@ -267,7 +299,8 @@ class Ant {
       bored--;
     } else {
       // Sniff trails
-      if (hasFood) {
+      // will look for home if they have food trail, or if they're fat!
+      if (hasFood || hungerLevel < minHungerLevel) {
         // Look for home
         int[] direction = homeMap.getStrongest(intX, intY);
         dx += direction[0] * random(1.5);
@@ -315,6 +348,129 @@ class Ant {
  
     lastX = intX;
     lastY = intY;
+  }
+}
+
+class Button {
+  
+  private String label;
+  private float buttonWidth, buttonHeight;
+  private float x,y;
+  private float borderColorR = 0, borderColorG = 0, borderColorB = 0;
+  private float buttonColorR = 255, buttonColorG = 255, buttonColorB = 255;
+  private float labelColorR = 0, labelColorG = 0, labelColorB = 0;
+  private boolean updating = false;
+  
+  Button(String label) {
+    this.label = label;
+  }
+  
+  Button(String _label, float _x, float _y, float _buttonWidth, float _buttonHeight) {
+    this.label = _label;
+    this.x = _x;
+    this.y = _y;
+    this.buttonWidth = _buttonWidth;
+    this.buttonHeight = _buttonHeight;
+  }
+  
+  void setPosition(float x, float y) {
+    this.x = x;
+    this.y = y;
+  }
+  
+  void setDimensionss(float buttonWidth, float buttonHeight) {
+    this.buttonWidth = buttonWidth;
+    this.buttonHeight = buttonHeight;
+  }
+  
+  void setWidth(float buttonWidth) {
+    this.buttonWidth = buttonWidth;
+  }
+  
+  float getWidth() {
+    return buttonWidth;
+  }
+  
+  void setHeight(float buttonHeight) {
+    this.buttonHeight = buttonHeight;
+  }
+  
+  float getHeight() {
+    return buttonHeight;
+  }
+  
+  void setXPosition(float x) {
+    this.x = x;
+  }
+  
+  float getXPosition() {
+    return x;
+  }
+  
+  void setYPosition(float y) {
+    this.y = y;
+  }
+  
+  float getYPosition() {
+    return y;
+  }
+  
+  void setButtonColor(float r, float g, float b) {
+    this.buttonColorR = r;
+    this.buttonColorG = g;
+    this.buttonColorB = b;
+  }
+  
+  void setBorderColor(float r, float g, float b) {
+    this.borderColorR = r;
+    this.borderColorG = g;
+    this.borderColorB = b;
+  }
+  
+  void setLabelColor(float r, float g, float b) {
+    this.labelColorR = r;
+    this.labelColorG = g;
+    this.labelColorB = b;
+  }
+  
+  boolean isMouseOverButton() {
+    return (mouseX >= x-(buttonWidth/2) 
+      && mouseX <= (x+buttonWidth/2) 
+      && mouseY >= (y-buttonHeight/2) 
+      && mouseY <= (y+buttonHeight/2));
+  }
+  
+  void display() {
+    
+    if (updating) {
+      stroke(255,0,0);
+    } else {
+      stroke(borderColorR, borderColorG, borderColorB);
+    }
+    fill(buttonColorR, buttonColorG, buttonColorB);
+    rectMode(CENTER);
+    rect(x,y,buttonWidth,buttonHeight,10);
+    noStroke();
+    textSize(buttonHeight*0.4);
+    textAlign(CENTER, CENTER);
+    fill(labelColorR, labelColorG, labelColorB);
+    text(label,x,y);
+  }
+  
+  void setLabel(String label) {
+    this.label = label;
+  }
+  
+  String getLabel() {
+    return label;
+  }
+  
+  boolean isUpdating() {
+    return updating;
+  }
+  
+  void setUpdating(boolean _updating) {
+    this.updating = _updating;
   }
 }
 
@@ -555,6 +711,65 @@ class Map {
     }
     // Return the resulting color
     return atotal;   
+  }
+  
+}
+
+class MyStatusBar {
+  
+  public static final String POSITION_TOP = "top";
+  public static final String POSITION_BOTTOM = "bottom";
+  
+  private String position;
+  private String statusText = "";
+  private float statusBarHeight = 30;
+  
+  MyStatusBar(String _position) {
+    this.position = _position;
+  }
+  
+  void setMyStatusBarHeight(float _statusBarHeight) {
+    this.statusBarHeight = _statusBarHeight;
+  }
+  
+  float getMyStatusBarHeight() {
+    return statusBarHeight;
+  }
+  
+  void setStatusText(String _text) {
+    this.statusText = _text;
+  }
+  
+  String getStatusText() {
+    return statusText;
+  }
+  
+  void setPosition(String _position) {
+    this.position = _position;
+  }
+
+  String getPosition() {
+    return position;
+  }  
+  
+  void display() {
+    float y = 0;
+    float x = 0;
+    
+    if (position.equals(POSITION_TOP)) {
+      y = 0;
+    } else if (position.equals(POSITION_BOTTOM)) {
+      y = height-statusBarHeight;
+    }
+    
+    rectMode(CORNER);
+    fill(0,0,0);
+    rect(x,y,width,statusBarHeight);
+    
+    fill(0,255,0);
+    textSize(statusBarHeight/2);
+    textAlign(LEFT, CENTER);
+    text(statusText,x+5,y+(statusBarHeight/2));
   }
   
 }
