@@ -34,7 +34,7 @@ float antHungerReduction = 20;  // how much hunger is reduced when ant eats
  
 void setup() {
   size(900, 506);
-  background(DIRT_COLOR);
+  //background(DIRT_COLOR);
   noStroke();
   //smooth();
  
@@ -52,7 +52,7 @@ void setup() {
   btnToggleHungerDisplay = new Button(showHungerLabel, 800, 20, 120, 30);
   
 }
- 
+
 void draw() {
   
   // Clear bg

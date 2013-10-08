@@ -33,8 +33,8 @@ float antHungerRate = 0.01;  // how much the ant gains hunger
 float antHungerReduction = 20;  // how much hunger is reduced when ant eats
  
 void setup() {
-  size(900, 506);
-  background(DIRT_COLOR);
+  size(900, 506, P2D);
+  //background(DIRT_COLOR);
   noStroke();
   //smooth();
  
@@ -52,7 +52,7 @@ void setup() {
   btnToggleHungerDisplay = new Button(showHungerLabel, 800, 20, 120, 30);
   
 }
- 
+
 void draw() {
   
   // Clear bg
@@ -711,65 +711,6 @@ class Map {
     }
     // Return the resulting color
     return atotal;   
-  }
-  
-}
-
-class MyStatusBar {
-  
-  public static final String POSITION_TOP = "top";
-  public static final String POSITION_BOTTOM = "bottom";
-  
-  private String position;
-  private String statusText = "";
-  private float statusBarHeight = 30;
-  
-  MyStatusBar(String _position) {
-    this.position = _position;
-  }
-  
-  void setMyStatusBarHeight(float _statusBarHeight) {
-    this.statusBarHeight = _statusBarHeight;
-  }
-  
-  float getMyStatusBarHeight() {
-    return statusBarHeight;
-  }
-  
-  void setStatusText(String _text) {
-    this.statusText = _text;
-  }
-  
-  String getStatusText() {
-    return statusText;
-  }
-  
-  void setPosition(String _position) {
-    this.position = _position;
-  }
-
-  String getPosition() {
-    return position;
-  }  
-  
-  void display() {
-    float y = 0;
-    float x = 0;
-    
-    if (position.equals(POSITION_TOP)) {
-      y = 0;
-    } else if (position.equals(POSITION_BOTTOM)) {
-      y = height-statusBarHeight;
-    }
-    
-    rectMode(CORNER);
-    fill(0,0,0);
-    rect(x,y,width,statusBarHeight);
-    
-    fill(0,255,0);
-    textSize(statusBarHeight/2);
-    textAlign(LEFT, CENTER);
-    text(statusText,x+5,y+(statusBarHeight/2));
   }
   
 }
