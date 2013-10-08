@@ -40,14 +40,15 @@ void setup() {
   for (int i=0; i<10; i++) {
     food.addFood(400+int(random(-50, 50)), 300+int(random(-50, 50)));
   }
+  
 }
  
 void draw() {
   // Clear bg
   //background(DIRT_COLOR);
- 
+  
   // Add food
-  if (mousePressed) {
+  if (mousePressed && mouseButton == LEFT) {
     food.addFood(mouseX, mouseY);
   }
  
@@ -57,8 +58,7 @@ void draw() {
     if (food.getValue(i)) {
       // Draw food
       pixelColor = FOOD_COLOR;
-    }
-    else {
+    } else {
       // Draw pheromones
       // I found the direct math to be faster than blendColor()
       float pixelAlpha = pherHome.getPercentage(i);
@@ -84,8 +84,15 @@ void draw() {
   // Draw ants
   for (int i = 0; i < col.ants.length; i++) {
     Ant thisAnt = col.ants[i];
- 
-    thisAnt.step();
+    
+    if (thisAnt.getHungerLevel() >= thisAnt.getMaxHungerLevel()) {
+      thisAnt.setAlive(false);
+    }
+    
+    if (thisAnt.isAlive()) {
+      thisAnt.step();
+      thisAnt.setHungerLevel(thisAnt.getHungerLevel() + 0.01);
+    }
  
     int thisXi = thisAnt.intX;
     int thisYi = thisAnt.intY;
@@ -109,6 +116,7 @@ void draw() {
       thisAnt.hasFood = true;
       thisAnt.foodPher = 100;
       food.bite(thisXi, thisYi);
+      thisAnt.setHungerLevel(thisAnt.getHungerLevel() - 20);
     }
  
     if (abs(thisAnt.dx) > abs(thisAnt.dy)) {
@@ -118,6 +126,10 @@ void draw() {
       // Vertical ant
       rect(thisXf,thisYf,2,3);
     }
+    
+    if (mouseNearAnt(thisAnt.intX, thisAnt.intY)) {
+      showAntHunger(thisAnt);
+    }
   }
  
   // Evaporate
@@ -126,6 +138,40 @@ void draw() {
  
   // Debug
   //println(frameRate);
+  
+}
+
+boolean mouseNearAnt(int _antX, int _antY) {
+  // buffer distance, since ants are small
+  int buffer = 15;
+  
+  if ( (mouseX >= _antX-buffer && mouseX <= _antX+buffer) && (mouseY >= _antY-buffer && mouseY <= _antY+buffer) ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+void showAntHunger (Ant _ant) {
+  textAlign(CENTER);
+  textSize(10);
+  int antHunger = (int) _ant.hungerLevel;
+  if (antHunger >= _ant.getMaxHungerLevel()) {
+    fill(255,0,0);
+  } else if (antHunger < _ant.getMinHungerLevel()) {
+    fill(0,0,255);
+  } else {
+    fill(0,0,0);
+  }
+  text(antHunger, _ant.intX, _ant.intY);
+}
+
+void mouseDragged() {
+  
+  if (mouseButton == RIGHT) {
+    pherHome.blur(mouseX, mouseY);
+    pherFood.blur(mouseX, mouseY);
+  }
 }
 
 class Ant {
@@ -153,6 +199,18 @@ class Ant {
   Map foodMap;
   
   color antColor;
+  
+  // the current hunger level
+  float hungerLevel = 0.0;
+  
+  // what does it take to kill this ant?!
+  float maxHungerLevel = 100.0;
+  
+  // minimum hunger level. If ant eats food after this, they're overweight!
+  float minHungerLevel = 0.0;
+  
+  // is the ant alive?
+  boolean alive = true;
  
   Ant(int _x, int _y, Map _homePher, Map _foodMap) {
     intX = homeX = _x;
@@ -164,6 +222,38 @@ class Ant {
     
     // assign a random color for the ant to make it easier to track
     antColor = color(random(255), random(255), random(255));
+  }
+  
+  float getHungerLevel() {
+    return hungerLevel;
+  }
+  
+  public void setHungerLevel(float _hungerLevel) {
+    this.hungerLevel = _hungerLevel;
+  }
+  
+  public void setMaxHungerLevel(float _maxHungerLevel) {
+    this.maxHungerLevel = _maxHungerLevel;
+  }
+  
+  public float getMaxHungerLevel() {
+    return maxHungerLevel;
+  }
+  
+  public void setMinHungerLevel(float _minHungerLevel) {
+    this.minHungerLevel = _minHungerLevel;
+  }
+  
+  public float getMinHungerLevel() {
+    return minHungerLevel;
+  }
+  
+  boolean isAlive() {
+    return alive;
+  }
+  
+  public void setAlive(boolean _alive) {
+    this.alive = _alive;
   }
  
   void step() {
@@ -320,6 +410,13 @@ class Map {
  
   private float MAX_VAL = 100;
   private float EVAPORATION_RATE = .999;
+  
+  // convolution/blur stuff
+  int blurWidth = 30;  // box width and height
+  float blurAmount = 0.111;
+  float[][] matrix = { { blurAmount, blurAmount, blurAmount },
+                       { blurAmount, blurAmount, blurAmount },
+                       { blurAmount, blurAmount, blurAmount } };
  
   // A float map
   Map (int w, int h) {
@@ -431,6 +528,35 @@ class Map {
  
     return strongest;
   }
+  
+  void blur(int _xpos, int _ypos) {
+    // Calculate the blur rectangle
+    int xstart = constrain(_xpos - blurWidth/2, 0, width);
+    int ystart = constrain(_ypos - blurWidth/2, 0, height);
+    int xend = constrain(_xpos + blurWidth/2, 0, width);
+    int yend = constrain(_ypos + blurWidth/2, 0, height);
+    int matrixsize = 3;
+
+    // Begin our loop for every pixel in the smaller image
+    for (int x = xstart; x < xend; x++) {
+      for (int y = ystart; y < yend; y++) {
+        setValue(x, y, convolution(x, y, matrix, matrixsize));
+      }
+    }
+  }
+  
+  float convolution(int x, int y, float[][] matrix, int matrixsize)
+  {
+    float atotal = 0.0;
+    for (int i = 0; i < matrixsize; i++){
+      for (int j= 0; j < matrixsize; j++){
+        atotal += (getValue(x-1+i, y-1+i) * matrix[i][j]);
+      }
+    }
+    // Return the resulting color
+    return atotal;   
+  }
+  
 }
 
 
