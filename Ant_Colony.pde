@@ -34,7 +34,7 @@ float antHungerReduction = 20;  // how much hunger is reduced when ant eats
  
 void setup() {
   size(900, 506);
-  //background(DIRT_COLOR);
+  background(DIRT_COLOR);
   noStroke();
   //smooth();
  

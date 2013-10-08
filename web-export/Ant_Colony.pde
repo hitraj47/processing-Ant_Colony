@@ -33,8 +33,8 @@ float antHungerRate = 0.01;  // how much the ant gains hunger
 float antHungerReduction = 20;  // how much hunger is reduced when ant eats
  
 void setup() {
-  size(900, 506, P2D);
-  //background(DIRT_COLOR);
+  size(900, 506);
+  background(DIRT_COLOR);
   noStroke();
   //smooth();
  
