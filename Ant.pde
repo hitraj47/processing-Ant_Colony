@@ -90,19 +90,25 @@ class Ant {
       // Ignore pheromones
       bored--;
     } else {
+      float distance;
+      if (hungerLevel < minHungerLevel) {  // fat ass ant, moves less!
+        distance = 0.1;
+      } else {
+        distance = 1.5;  // original random distance
+      }
       // Sniff trails
       if (hasFood) {
         // Look for home
         int[] direction = homeMap.getStrongest(intX, intY);
-        dx += direction[0] * random(1.5);
-        dy += direction[1] * random(1.5);
+        dx += direction[0] * random(distance);
+        dy += direction[1] * random(distance);
       }
       else
       {
         // Look for food
         int[] direction = foodMap.getStrongest(intX, intY);
-        dx += direction[0] * random(1.5);
-        dy += direction[1] * random(1.5);
+        dx += direction[0] * random(distance);
+        dy += direction[1] * random(distance);
       }
     }
     // Bounding limits, bounce off of edge

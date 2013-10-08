@@ -28,6 +28,9 @@ Map pherFood;
 Button btnToggleHungerDisplay;
 String showHungerLabel = "Show hunger levels";
 String hideHungerLabel = "Hide hunger levels";
+
+float antHungerRate = 0.05;  // how much the ant gains hunger
+float antHungerReduction = 20;  // how much hunger is reduced when ant eats
  
 void setup() {
   size(900, 506);
@@ -94,7 +97,7 @@ void draw() {
     
     if (thisAnt.isAlive()) {
       thisAnt.step();
-      thisAnt.setHungerLevel(thisAnt.getHungerLevel() + 0.01);
+      thisAnt.setHungerLevel(thisAnt.getHungerLevel() + antHungerRate);
     }
  
     int thisXi = thisAnt.intX;
@@ -119,7 +122,7 @@ void draw() {
       thisAnt.hasFood = true;
       thisAnt.foodPher = 100;
       food.bite(thisXi, thisYi);
-      thisAnt.setHungerLevel(thisAnt.getHungerLevel() - 20);
+      thisAnt.setHungerLevel(thisAnt.getHungerLevel() - antHungerReduction);
     }
  
     if (abs(thisAnt.dx) > abs(thisAnt.dy)) {
