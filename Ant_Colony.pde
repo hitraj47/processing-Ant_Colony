@@ -29,7 +29,7 @@ Button btnToggleHungerDisplay;
 String showHungerLabel = "Show hunger levels";
 String hideHungerLabel = "Hide hunger levels";
 
-float antHungerRate = 0.05;  // how much the ant gains hunger
+float antHungerRate = 0.01;  // how much the ant gains hunger
 float antHungerReduction = 20;  // how much hunger is reduced when ant eats
  
 void setup() {
