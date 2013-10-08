@@ -97,6 +97,7 @@ class Button {
     fill(buttonColorR, buttonColorG, buttonColorB);
     rectMode(CENTER);
     rect(x,y,buttonWidth,buttonHeight,10);
+    noStroke();
     textSize(buttonHeight*0.4);
     textAlign(CENTER, CENTER);
     fill(labelColorR, labelColorG, labelColorB);

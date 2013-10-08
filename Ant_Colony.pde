@@ -130,11 +130,11 @@ void draw() {
       rect(thisXf,thisYf,2,3);
     }
     
-    if (btnToggleHungerDisplay.getLabel().equals(hideHungerLabel)) {
+    if (btnToggleHungerDisplay.getLabel().equals(showHungerLabel)) {
       if (mouseNearAnt(thisAnt.intX, thisAnt.intY)) {
         showAntHunger(thisAnt);
       }
-    } else if (btnToggleHungerDisplay.getLabel().equals(showHungerLabel)) {
+    } else if (btnToggleHungerDisplay.getLabel().equals(hideHungerLabel)) {
       showAntHunger(thisAnt);
     }
   }
@@ -184,7 +184,6 @@ boolean mouseNearAnt(int _antX, int _antY) {
 void showAntHunger (Ant _ant) {
   textAlign(CENTER);
   textSize(10);
-  noStroke();
   int antHunger = (int) _ant.hungerLevel;
   if (antHunger >= _ant.getMaxHungerLevel()) {
     fill(255,0,0);
