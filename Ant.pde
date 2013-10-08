@@ -23,6 +23,15 @@ class Ant {
   Map foodMap;
   
   color antColor;
+  
+  // the current hunger level
+  int hungerLevel = 0;
+  
+  // what does it take to kill this ant?!
+  public static final int MAX_HUNGER_LEVEL = 100;
+  
+  // is the ant alive?
+  boolean alive = true;
  
   Ant(int _x, int _y, Map _homePher, Map _foodMap) {
     intX = homeX = _x;
@@ -34,6 +43,22 @@ class Ant {
     
     // assign a random color for the ant to make it easier to track
     antColor = color(random(255), random(255), random(255));
+  }
+  
+  int getHungerLevel() {
+    return hungerLevel;
+  }
+  
+  public void setHungerLevel(int _hungerLevel) {
+    this.hungerLevel = _hungerLevel;
+  }
+  
+  boolean isAlive() {
+    return alive;
+  }
+  
+  public void setAlive(boolean _alive) {
+    this.alive = _alive;
   }
  
   void step() {
