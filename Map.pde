@@ -9,7 +9,7 @@ class Map {
   private float EVAPORATION_RATE = .999;
   
   // convolution/blur stuff
-  int blurWidth = 60;  // box width and height
+  int blurWidth = 30;  // box width and height
   float blurAmount = 0.111;
   float[][] matrix = { { blurAmount, blurAmount, blurAmount },
                        { blurAmount, blurAmount, blurAmount },
