@@ -26,7 +26,7 @@ Map pherHome;
 Map pherFood;
  
 void setup() {
-  size(900, 506, P2D);
+  size(900, 506);
   background(DIRT_COLOR);
   noStroke();
   //smooth();
