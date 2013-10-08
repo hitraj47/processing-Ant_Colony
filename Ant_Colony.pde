@@ -126,6 +126,10 @@ void draw() {
       // Vertical ant
       rect(thisXf,thisYf,2,3);
     }
+    
+    if (mouseNearAnt(thisAnt.intX, thisAnt.intY)) {
+      showAntHunger(thisAnt);
+    }
   }
  
   // Evaporate
@@ -135,6 +139,25 @@ void draw() {
   // Debug
   //println(frameRate);
   
+}
+
+boolean mouseNearAnt(int _antX, int _antY) {
+  // buffer distance, since ants are small
+  int buffer = 15;
+  
+  if ( (mouseX >= _antX-buffer && mouseX <= _antX+buffer) && (mouseY >= _antY-buffer && mouseY <= _antY+buffer) ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+void showAntHunger (Ant _ant) {
+  textAlign(CENTER);
+  textSize(10);
+  int antHunger = (int) _ant.hungerLevel;
+  fill(0,0,0);
+  text(antHunger, _ant.intX, _ant.intY);
 }
 
 void mouseDragged() {
