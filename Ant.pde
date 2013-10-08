@@ -25,10 +25,13 @@ class Ant {
   color antColor;
   
   // the current hunger level
-  int hungerLevel = 0;
+  float hungerLevel = 0.0;
   
   // what does it take to kill this ant?!
-  public static final int MAX_HUNGER_LEVEL = 100;
+  float maxHungerLevel = 100.0;
+  
+  // minimum hunger level. If ant eats food after this, they're overweight!
+  float minHungerLevel = 0.0;
   
   // is the ant alive?
   boolean alive = true;
@@ -45,12 +48,28 @@ class Ant {
     antColor = color(random(255), random(255), random(255));
   }
   
-  int getHungerLevel() {
+  float getHungerLevel() {
     return hungerLevel;
   }
   
-  public void setHungerLevel(int _hungerLevel) {
+  public void setHungerLevel(float _hungerLevel) {
     this.hungerLevel = _hungerLevel;
+  }
+  
+  public void setMaxHungerLevel(float _maxHungerLevel) {
+    this.maxHungerLevel = _maxHungerLevel;
+  }
+  
+  public float getMaxHungerLevel() {
+    return maxHungerLevel;
+  }
+  
+  public void setMinHungerLevel(float _minHungerLevel) {
+    this.minHungerLevel = _minHungerLevel;
+  }
+  
+  public float getMinHungerLevel() {
+    return minHungerLevel;
   }
   
   boolean isAlive() {

@@ -84,8 +84,15 @@ void draw() {
   // Draw ants
   for (int i = 0; i < col.ants.length; i++) {
     Ant thisAnt = col.ants[i];
- 
-    thisAnt.step();
+    
+    if (thisAnt.getHungerLevel() >= thisAnt.getMaxHungerLevel()) {
+      thisAnt.setAlive(false);
+    }
+    
+    if (thisAnt.isAlive()) {
+      thisAnt.step();
+      thisAnt.setHungerLevel(thisAnt.getHungerLevel() + 0.1);
+    }
  
     int thisXi = thisAnt.intX;
     int thisYi = thisAnt.intY;
@@ -109,6 +116,7 @@ void draw() {
       thisAnt.hasFood = true;
       thisAnt.foodPher = 100;
       food.bite(thisXi, thisYi);
+      thisAnt.setHungerLevel(thisAnt.getHungerLevel() - 100);
     }
  
     if (abs(thisAnt.dx) > abs(thisAnt.dy)) {
