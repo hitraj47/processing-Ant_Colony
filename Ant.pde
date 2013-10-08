@@ -91,7 +91,8 @@ class Ant {
       bored--;
     } else {
       // Sniff trails
-      if (hasFood) {
+      // will look for home if they have food trail, or if they're fat!
+      if (hasFood || hungerLevel < minHungerLevel) {
         // Look for home
         int[] direction = homeMap.getStrongest(intX, intY);
         dx += direction[0] * random(1.5);
