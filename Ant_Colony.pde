@@ -24,6 +24,10 @@ Colony col;
 Food food;
 Map pherHome;
 Map pherFood;
+
+Button btnToggleHungerDisplay;
+String showHungerLabel = "Show hunger levels";
+String hideHungerLabel = "Hide hunger levels";
  
 void setup() {
   size(900, 506);
@@ -41,6 +45,9 @@ void setup() {
     food.addFood(400+int(random(-50, 50)), 300+int(random(-50, 50)));
   }
   
+  // show/hide ant hunger
+  btnToggleHungerDisplay = new Button(showHungerLabel, 800, 20, 120, 30);
+  
 }
  
 void draw() {
@@ -48,11 +55,6 @@ void draw() {
   // Clear bg
   //background(DIRT_COLOR);
   
-  // Add food
-  if (mousePressed && mouseButton == LEFT) {
-    food.addFood(mouseX, mouseY);
-  }
- 
   loadPixels();
   for (int i=0; i<pherHome.length; i++) {
     color pixelColor;
@@ -128,7 +130,11 @@ void draw() {
       rect(thisXf,thisYf,2,3);
     }
     
-    if (mouseNearAnt(thisAnt.intX, thisAnt.intY)) {
+    if (btnToggleHungerDisplay.getLabel().equals(hideHungerLabel)) {
+      if (mouseNearAnt(thisAnt.intX, thisAnt.intY)) {
+        showAntHunger(thisAnt);
+      }
+    } else if (btnToggleHungerDisplay.getLabel().equals(showHungerLabel)) {
       showAntHunger(thisAnt);
     }
   }
@@ -140,6 +146,28 @@ void draw() {
   // Debug
   //println(frameRate);
   
+  // display button
+  btnToggleHungerDisplay.display();
+  
+}
+
+void mousePressed() {
+   // Add food
+  if (mouseButton == LEFT) {
+    if (btnToggleHungerDisplay.isMouseOverButton()) {
+      toggleHungerDisplayButton();
+    } else {
+      food.addFood(mouseX, mouseY);
+    }
+  }
+}
+
+void toggleHungerDisplayButton() {
+  if (btnToggleHungerDisplay.getLabel().equals(showHungerLabel)) {
+    btnToggleHungerDisplay.setLabel(hideHungerLabel);
+  } else {
+    btnToggleHungerDisplay.setLabel(showHungerLabel);
+  }
 }
 
 boolean mouseNearAnt(int _antX, int _antY) {
@@ -156,6 +184,7 @@ boolean mouseNearAnt(int _antX, int _antY) {
 void showAntHunger (Ant _ant) {
   textAlign(CENTER);
   textSize(10);
+  noStroke();
   int antHunger = (int) _ant.hungerLevel;
   if (antHunger >= _ant.getMaxHungerLevel()) {
     fill(255,0,0);
