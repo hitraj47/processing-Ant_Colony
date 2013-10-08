@@ -44,6 +44,7 @@ void setup() {
 }
  
 void draw() {
+  
   // Clear bg
   //background(DIRT_COLOR);
   
