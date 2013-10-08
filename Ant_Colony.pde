@@ -91,7 +91,7 @@ void draw() {
     
     if (thisAnt.isAlive()) {
       thisAnt.step();
-      thisAnt.setHungerLevel(thisAnt.getHungerLevel() + 0.1);
+      thisAnt.setHungerLevel(thisAnt.getHungerLevel() + 0.01);
     }
  
     int thisXi = thisAnt.intX;
@@ -116,7 +116,7 @@ void draw() {
       thisAnt.hasFood = true;
       thisAnt.foodPher = 100;
       food.bite(thisXi, thisYi);
-      thisAnt.setHungerLevel(thisAnt.getHungerLevel() - 100);
+      thisAnt.setHungerLevel(thisAnt.getHungerLevel() - 20);
     }
  
     if (abs(thisAnt.dx) > abs(thisAnt.dy)) {
@@ -156,7 +156,13 @@ void showAntHunger (Ant _ant) {
   textAlign(CENTER);
   textSize(10);
   int antHunger = (int) _ant.hungerLevel;
-  fill(0,0,0);
+  if (antHunger >= _ant.getMaxHungerLevel()) {
+    fill(255,0,0);
+  } else if (antHunger < _ant.getMinHungerLevel()) {
+    fill(0,0,255);
+  } else {
+    fill(0,0,0);
+  }
   text(antHunger, _ant.intX, _ant.intY);
 }
 
