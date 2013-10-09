@@ -49,7 +49,7 @@ void setup() {
   }
   
   // show/hide ant hunger
-  btnToggleHungerDisplay = new Button(showHungerLabel, 800, 20, 120, 30);
+  btnToggleHungerDisplay = new Button(showHungerLabel, 800, 20, 150, 30);
   
 }
 
